@@ -6,7 +6,6 @@ LastEditors: zhouyuchong
 LastEditTime: 2024-12-11 14:35:20
 '''
 import os
-os.environ['DASHSCOPE_API_KEY'] = "sk-b9c2d6517ef648e190dcb4a6dad32708"
 
 import chromadb
 from langchain.prompts import ChatPromptTemplate

@@ -3,7 +3,7 @@ Author: zhouyuchong
 Date: 2024-12-09 13:23:00
 Description: 
 LastEditors: zhouyuchong
-LastEditTime: 2024-12-11 13:50:18
+LastEditTime: 2024-12-24 14:59:41
 '''
 import os
 from openai import OpenAI
@@ -55,13 +55,17 @@ def get_model_response(multi_modal_input,history,model,temperature,max_tokens,hi
         )
         # 获取chunk
         retrieve_chunk = retriever_engine.retrieve(prompt)
-        print(f"原始chunk为：{retrieve_chunk}\n")
+        # print(f"原始chunk为：{retrieve_chunk}\n")
+        count = 0
+        for chunk in retrieve_chunk:
+            print(count, chunk)
+            count += 1
         try:
             results = dashscope_rerank.postprocess_nodes(retrieve_chunk, query_str=prompt)
             # print(f"rerank成功，重排后的chunk为：{results}\n")
-            print("after rerank\n")
-            for node in results:
-                print(node)
+        #     print("after rerank\n")
+        #     for node in results:
+        #         print(node)
         except:
             results = retrieve_chunk[:chunk_cnt]
             print(f"rerank失败，chunk为：{results}\n")
@@ -78,6 +82,7 @@ def get_model_response(multi_modal_input,history,model,temperature,max_tokens,hi
         prompt_template = prompt
         chunk_show = ""
     history[-1][-1] = ""
+    print(history, history_round)
     client = OpenAI(
         api_key=os.getenv("DASHSCOPE_API_KEY"),
         base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
@@ -86,8 +91,9 @@ def get_model_response(multi_modal_input,history,model,temperature,max_tokens,hi
     messages = []
     history_round = min(len(history),history_round)
     for i in range(history_round):
-        messages.append({'role': 'user', 'content': history[-history_round+i][0]})
-        messages.append({'role': 'assistant', 'content': history[-history_round+i][1]})
+        if history[-history_round+i][0] is not None and history[-history_round+i][1] is not None:
+            messages.append({'role': 'user', 'content': history[-history_round+i][0]})
+            messages.append({'role': 'assistant', 'content': history[-history_round+i][1]})
     messages.append({'role': 'user', 'content': prompt_template})
     messages = [system_message] + messages
     completion = client.chat.completions.create(

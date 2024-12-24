@@ -3,11 +3,10 @@ Author: zhouyuchong
 Date: 2024-12-19 13:27:04
 Description: 
 LastEditors: zhouyuchong
-LastEditTime: 2024-12-20 11:19:31
+LastEditTime: 2024-12-24 15:03:29
 '''
 import os
 # 设置环境变量
-os.environ['DASHSCOPE_API_KEY'] = "sk-b9c2d6517ef648e190dcb4a6dad32708"
 import chromadb
 
 from llama_index.core import VectorStoreIndex,Settings,SimpleDirectoryReader, StorageContext
@@ -88,6 +87,5 @@ def chroma_load():
     # print(response)
 
 if __name__ == '__main__':
-    os.environ['DASHSCOPE_API_KEY'] = "sk-b9c2d6517ef648e190dcb4a6dad32708"
     # main()
     chroma_load()

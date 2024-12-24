@@ -3,15 +3,15 @@ Author: zhouyuchong
 Date: 2024-12-17 13:38:26
 Description: 
 LastEditors: zhouyuchong
-LastEditTime: 2024-12-24 15:03:56
+LastEditTime: 2024-12-24 11:28:42
 '''
 import os
+
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 from openai import OpenAI
-
-from util import load_ms_docx, get_titles, get_content_from_image, get_content_from_table, check_resize_image
+from .util import load_ms_docx, get_titles, get_content_from_image, get_content_from_table, check_resize_image
 
 
 def format_chunk_from_docx(file_path):
@@ -60,7 +60,7 @@ def format_chunk_from_docx(file_path):
     for p in paragraphs:
         table_signal = False
         logging.info(f"Formating paragraph: {titles[paragraph_index]}")
-        text = f'【{product_name}的{titles[paragraph_index]}: '
+        text = f'【产品: {product_name}的{titles[paragraph_index]}: '
         for line in p:
             if line.startswith("|"):
                 logging.info("Find table, will format later")

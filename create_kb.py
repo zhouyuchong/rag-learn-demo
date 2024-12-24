@@ -83,10 +83,8 @@ def create_structured_db(db_name:str,data_table:list):
         for doc in documents:
             doc_content = doc.get_content().split('\n')
             for chunk in doc_content:
-                print(chunk, '\n\n')
                 node = TextNode(text=chunk)
                 node.metadata = {'source': doc.get_doc_id(),'file_name':doc.metadata['file_name']}
-                # print(node, '\n\n')
                 nodes = nodes + [node]
         index = VectorStoreIndex(nodes)
         db_path = os.path.join(DB_PATH,db_name)

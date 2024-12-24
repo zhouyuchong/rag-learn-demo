@@ -3,11 +3,10 @@ Author: zhouyuchong
 Date: 2024-12-09 11:37:58
 Description: 
 LastEditors: zhouyuchong
-LastEditTime: 2024-12-18 14:18:16
+LastEditTime: 2024-12-24 15:03:53
 '''
 import os
 # 设置环境变量
-os.environ['DASHSCOPE_API_KEY'] = "sk-b9c2d6517ef648e190dcb4a6dad32708"
 from openai import OpenAI
 from langchain.prompts import ChatPromptTemplate
 import base64

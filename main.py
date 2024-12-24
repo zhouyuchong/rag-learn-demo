@@ -6,6 +6,7 @@ from html_string import main_html,plain_html
 from upload_file import *
 from create_kb import *
 from chat import get_model_response
+from default_text import greetings
 def user(user_message, history):
     print(user_message)
     return {'text': '','files': user_message['files']}, history + [[user_message['text'], None]]
@@ -19,9 +20,8 @@ def get_chat_block():
         gr.HTML(plain_html)
         with gr.Row():     
             with gr.Column(scale=10):
-                chatbot = gr.Chatbot(label="Chatbot",height=750,avatar_images=("images/user.jpeg","images/tongyi.png"))
+                chatbot = gr.Chatbot(value=greetings, label="Chatbot",height=750,avatar_images=("images/user.jpeg","images/tongyi.png"))
                 with gr.Row():
-                    # 
                     input_message = gr.MultimodalTextbox(label="请输入",file_types=[".xlsx",".csv",".docx",".pdf",".txt"],scale=7)
                     clear_btn = gr.ClearButton(chatbot,input_message,scale=1)
             # 模型与知识库参数
@@ -70,10 +70,26 @@ def get_upload_block():
                 with gr.Row():
                     data_label_1 =gr.Dropdown(choices=os.listdir(STRUCTURED_FILE_PATH),label="管理数据表",interactive=True,scale=8,multiselect=True)
                     delete_data_table_btn = gr.Button("删除数据表",variant="stop",scale=1)
+        with gr.Tab("图文数据"):
+            with gr.Accordion(label="新建类目",open=True):
+                with gr.Column(scale=2):
+                    file_with_image = gr.Files(file_types=["docx"])
+                    with gr.Row():
+                        new_label_2 = gr.Textbox(label="类目名称",placeholder="请输入类目名称",scale=5)
+                        create_data_btn = gr.Button("新建类目",variant="primary",scale=1)
+            with gr.Accordion(label="管理类目",open=False):
+                with gr.Row():
+                    data_label_2 =gr.Dropdown(choices=os.listdir(STRUCTURED_FILE_PATH),label="管理类目",interactive=True,scale=8,multiselect=True)
+                    delete_data_btn = gr.Button("删除类目_1",variant="stop",scale=1)
+
         delete_label_btn.click(delete_label,inputs=[data_label]).then(fn=update_label,outputs=[data_label])
         create_label_btn.click(fn=upload_unstructured_file,inputs=[unstructured_file,new_label]).then(fn=update_label,outputs=[data_label])
         delete_data_table_btn.click(delete_data_table,inputs=[data_label_1]).then(fn=update_datatable,outputs=[data_label_1])
         create_label_btn_1.click(fn=upload_structured_file,inputs=[structured_file,new_label_1]).then(fn=update_datatable,outputs=[data_label_1])
+
+        delete_data_btn.click(delete_data,inputs=[data_label_2]).then(fn=update_data,outputs=[data_label_2])
+        create_data_btn.click(fn=upload_file_with_image,inputs=[file_with_image,new_label_2]).then(fn=update_data,outputs=[data_label_2])      
+
         upload.load(update_label,[],data_label)
         upload.load(update_datatable,[],data_label_1)
     return upload
